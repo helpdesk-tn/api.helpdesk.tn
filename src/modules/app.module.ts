@@ -5,14 +5,13 @@ import { dataSourceOptions } from 'src/database/config';
 
 // Modules
 import { UsersModule } from './users/users.module';
-import { StaffModule } from './staff/staff.module';
+import { ClientController } from './users/client/client.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot(dataSourceOptions),
     UsersModule,
-    StaffModule,
   ],
   controllers: [],
   providers: [],

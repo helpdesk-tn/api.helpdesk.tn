@@ -1,22 +1,39 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { UsersService } from './users.service';
-import { UsersController } from './users.controller';
 import { UserEntity } from 'src/database/models/user.entity';
+import { StaffController } from './staff/staff.controller';
+import { StaffService } from './staff/staff.service';
+import { StaffEntity } from 'src/database/models/staff.entity';
+import { StaffExistsMiddleware } from 'src/common/middleware/staff-exists.middleware';
+import { ClientController } from './client/client.controller';
+import { ClientService } from './client/client.service';
+import { ClientEntity } from 'src/database/models/client.entity';
 
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([
       UserEntity,
+      StaffEntity,
+      ClientEntity
     ]),
   ],
   controllers: [
-    UsersController,
+    StaffController,
+    ClientController
   ],
   providers: [
-    UsersService,
+    StaffService,
+    ClientService
   ],
 })
-export class UsersModule { }
+export class UsersModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(StaffExistsMiddleware)
+      .exclude({ path: '/v1/staffs', method: RequestMethod.POST })
+      .exclude({ path: '/v1/staffs', method: RequestMethod.GET })
+      .forRoutes(StaffController)
+
+  }
+}

@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseFilters, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { StaffService } from './staff.service';
 import { StaffEntity } from 'src/database/models/staff.entity';
 import { TransformResponseInterceptor } from 'src/common/interceptors/transform-response.interceptor';
+import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
 
-@ApiTags('STAFFS MGMT')
+@ApiTags('STAFF MGMT')
 @UseInterceptors(TransformResponseInterceptor)
 @Controller({ version: '1', path: 'staff' })
 export class StaffController {
@@ -24,7 +25,7 @@ export class StaffController {
         return this.staffService.getOne(id);
     }
 
-    @Get('')
+    @Get()
     getAll() {
         return this.staffService.getAll();
     }
@@ -40,6 +41,7 @@ export class StaffController {
     }
 
     @Delete(':id')
+    @UseFilters(new HttpExceptionFilter())
     delete(@Param('id') id: string) {
         return this.staffService.delete(id);
     }
