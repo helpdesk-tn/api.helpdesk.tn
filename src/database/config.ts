@@ -4,6 +4,7 @@ import { config } from "dotenv";
 
 // ENTITIES
 import { UserEntity } from "./models/user.entity";
+import { StaffEntity } from "./models/staff.entity";
 
 config();
 
@@ -18,6 +19,7 @@ export const dataSourceOptions: DataSourceOptions = {
   database: configService.get("DB_NAME"),
   entities: [
     UserEntity,
+    StaffEntity
   ],
   migrations: ["dist/database/migrations/*.js"],
   synchronize: true,
