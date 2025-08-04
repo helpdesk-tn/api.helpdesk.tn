@@ -21,8 +21,7 @@ export class StaffService {
             return await this.staffRepository.save(newUser)
         } catch (error) {
             if (error instanceof TypeORMError)
-                console.log("the errror :", error.message)
-            throw new ForbiddenException('Credentials taken');
+                throw new ForbiddenException('Credentials taken');
         }
     }
 

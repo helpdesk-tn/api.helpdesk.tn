@@ -19,8 +19,7 @@ export class ClientService {
             return await this.clientRepository.save(newUser)
         } catch (error) {
             if (error instanceof TypeORMError)
-                console.log("the errror :", error.message)
-            throw new ForbiddenException('Credentials taken');
+                throw new ForbiddenException('Credentials taken');
         }
     }
 

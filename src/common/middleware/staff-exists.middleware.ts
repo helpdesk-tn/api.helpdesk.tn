@@ -1,6 +1,6 @@
 import { NestMiddleware, Logger, Injectable, NotFoundException } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
-import { StaffService } from "src/modules/staff/staff.service";
+import { StaffService } from "src/modules/users/staff/staff.service";
 
 @Injectable()
 export class StaffExistsMiddleware implements NestMiddleware {
