@@ -1,5 +1,6 @@
-import { ForbiddenException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ForbiddenException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { NotFoundError } from 'rxjs';
 import { ClientEntity } from 'src/database/models/client.entity';
 import { Repository, TypeORMError } from 'typeorm';
 
@@ -34,19 +35,19 @@ export class ClientService {
         }
     }
 
-    async getOne(id: string): Promise<ClientEntity> {
+    async getOne(id?: string, email?: string): Promise<ClientEntity> {
+
         try {
-            const foundUser = await this.clientRepository.findOne({
-                where: { id }
-            });
-            if (!foundUser) {
-                throw new InternalServerErrorException('client not found');
+            let client: ClientEntity;
+            if (email) {
+                client = await this.clientRepository.findOne({ where: { email } });
+            } else if (id) {
+                client = await this.clientRepository.findOne({ where: { id } });
             }
 
-            return foundUser;
-        }
-        catch (error) {
-            throw new ForbiddenException('Failed to retrieve client');
+            return client;
+        } catch (error) {
+            throw new NotFoundError('Database error occurred');
         }
     }
 

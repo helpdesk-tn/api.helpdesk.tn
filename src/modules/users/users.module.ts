@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/models/user.entity';
 import { StaffController } from './staff/staff.controller';
@@ -8,6 +8,7 @@ import { StaffExistsMiddleware } from 'src/common/middleware/staff-exists.middle
 import { ClientController } from './client/client.controller';
 import { ClientService } from './client/client.service';
 import { ClientEntity } from 'src/database/models/client.entity';
+import { ClientExistsMiddleware } from 'src/common/middleware/client-exists.middleware';
 
 
 @Module({
@@ -29,11 +30,13 @@ import { ClientEntity } from 'src/database/models/client.entity';
 })
 export class UsersModule {
   configure(consumer: MiddlewareConsumer) {
+
     consumer
       .apply(StaffExistsMiddleware)
-      .exclude({ path: '/v1/staffs', method: RequestMethod.POST })
-      .exclude({ path: '/v1/staffs', method: RequestMethod.GET })
       .forRoutes(StaffController)
+
+      .apply(ClientExistsMiddleware)
+      .forRoutes(ClientController);
 
   }
 }

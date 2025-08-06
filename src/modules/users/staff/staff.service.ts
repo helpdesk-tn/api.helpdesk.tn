@@ -1,6 +1,5 @@
-import { ForbiddenException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { ForbiddenException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ApiResponseDto, IMessage } from 'src/common/response.interface';
 import { StaffEntity } from 'src/database/models/staff.entity';
 import { Repository, TypeORMError } from 'typeorm';
 
@@ -17,7 +16,6 @@ export class StaffService {
             const newUser = this.staffRepository.create({
                 ...payload
             })
-
             return await this.staffRepository.save(newUser)
         } catch (error) {
             if (error instanceof TypeORMError)
@@ -27,28 +25,28 @@ export class StaffService {
 
     async getAll(): Promise<StaffEntity[]> {
         try {
-
             return await this.staffRepository.find();
-
         }
         catch (error) {
             throw new InternalServerErrorException('Failed to retrieve staffs');
         }
     }
 
-    async getOne(id: string): Promise<StaffEntity> {
+    async getOne(id?: string, email?: string): Promise<StaffEntity | null> {
+
         try {
-            const foundUser = await this.staffRepository.findOne({
-                where: { id }
-            });
-            if (!foundUser) {
-                throw new InternalServerErrorException('Staff not found');
+            console.log("id", id, "email ", email);
+            let staff: StaffEntity | null;
+
+            if (id) {
+                staff = await this.staffRepository.findOne({ where: { id } });
+            } else if (email) {
+                staff = await this.staffRepository.findOne({ where: { email } });
             }
 
-            return foundUser;
-        }
-        catch (error) {
-            throw new ForbiddenException('Failed to retrieve staff');
+            return staff;
+        } catch (error) {
+            throw new InternalServerErrorException('Database error occurred');
         }
     }
 
@@ -58,7 +56,6 @@ export class StaffService {
                 { id },
                 { ...payload }
             )
-
         } catch (error) {
             if (error instanceof TypeORMError)
                 throw new ForbiddenException('Database operation failed, duplicate found ');

@@ -1,26 +1,24 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseFilters, UseInterceptors } from '@nestjs/common';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from '@nestjs/common';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientService } from './client.service';
 import { ClientEntity } from 'src/database/models/client.entity';
-import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
+import { TransformResponseInterceptor } from 'src/common/interceptors/transform-response.interceptor';
 
 @ApiTags('CLIENTS MGMT')
+@UseInterceptors(TransformResponseInterceptor)
 @Controller({ version: '1', path: 'client' })
 export class ClientController {
 
     constructor(private readonly clientService: ClientService) { }
 
     @Post()
-    @ApiBody({
-        type: ClientEntity,
-    })
+    @ApiBody({ type: ClientEntity, })
     create(@Body() paylaod: Partial<ClientEntity>) {
         return this.clientService.create(paylaod);
     }
 
     @Get(':id')
-    getOne(
-        @Param('id') id: string) {
+    getOne(@Param('id') id: string) {
         return this.clientService.getOne(id);
     }
 
@@ -30,9 +28,7 @@ export class ClientController {
     }
 
     @Put(':id')
-    @ApiBody({
-        type: ClientEntity,
-    })
+    @ApiBody({ type: ClientEntity, })
     update(
         @Body() payload: Partial<ClientEntity>,
         @Param('id') id: string) {
@@ -40,10 +36,7 @@ export class ClientController {
     }
 
     @Delete(':id')
-    @UseFilters(new HttpExceptionFilter())
     delete(@Param('id') id: string) {
         return this.clientService.delete(id);
     }
-
-
 }
