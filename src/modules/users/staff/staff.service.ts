@@ -35,7 +35,6 @@ export class StaffService {
     async getOne(id?: string, email?: string): Promise<StaffEntity | null> {
 
         try {
-            console.log("id", id, "email ", email);
             let staff: StaffEntity | null;
 
             if (id) {

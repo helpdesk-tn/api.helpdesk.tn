@@ -1,4 +1,4 @@
-import { NestMiddleware, Logger, Injectable, NotFoundException, HttpException, HttpStatus, BadRequestException } from "@nestjs/common";
+import { NestMiddleware, Injectable, HttpException, HttpStatus, BadRequestException } from "@nestjs/common";
 import { NextFunction, Request, Response } from "express";
 import { ClientService } from "src/modules/users/client/client.service";
 import { StaffService } from "src/modules/users/staff/staff.service";
@@ -19,19 +19,11 @@ export class StaffExistsMiddleware implements NestMiddleware {
         const id = req.params.id || req.body.id || null;
         const email = req.body.email || null;
 
-        if ((method === 'POST' || method === 'PUT') && !email) {
-            throw new BadRequestException('Email is required for this operation');
-        }
-
         if (method === 'POST' || method === 'PUT') {
             const client = await this.clientService.getOne(id, email);
             if (client) {
                 throw new HttpException(`Email "${email}" already exists`, HttpStatus.FORBIDDEN);
             }
-            return next();
-        }
-
-        if (method === 'GET') {
             return next();
         }
 

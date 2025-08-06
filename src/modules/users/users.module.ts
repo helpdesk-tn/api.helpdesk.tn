@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from 'src/database/models/user.entity';
 import { StaffController } from './staff/staff.controller';
@@ -33,9 +33,11 @@ export class UsersModule {
 
     consumer
       .apply(StaffExistsMiddleware)
+      .exclude({ path: 'v1/staff', method: RequestMethod.GET })
       .forRoutes(StaffController)
 
       .apply(ClientExistsMiddleware)
+      .exclude({ path: 'v1/client', method: RequestMethod.GET })
       .forRoutes(ClientController);
 
   }
