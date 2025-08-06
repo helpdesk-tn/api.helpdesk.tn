@@ -5,6 +5,7 @@ import { dataSourceOptions } from 'src/database/config';
 
 // Modules
 import { UsersModule } from './users/users.module';
+import { ClientController } from './users/client/client.controller';
 
 @Module({
   imports: [
