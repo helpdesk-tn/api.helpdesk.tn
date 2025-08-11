@@ -27,6 +27,7 @@ import { ClientExistsMiddleware } from 'src/common/middleware/client-exists.midd
     StaffService,
     ClientService
   ],
+  exports:[ClientService]
 })
 export class UsersModule {
   configure(consumer: MiddlewareConsumer) {
