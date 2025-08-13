@@ -25,5 +25,8 @@ export class ClientEntity extends BaseEntity {
   @Column({ type: 'varchar', length: '250', nullable: true })
   phone: string;
 
+  @ApiProperty()
+  @Column({ type: 'simple-array', nullable: true })
+  Project: string[];
 
 }
