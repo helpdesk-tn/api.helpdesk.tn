@@ -15,7 +15,7 @@ export class TicketEntity extends BaseEntity {
   description: string;
 
   @ApiProperty()
-  @Column({ type: 'varchar', length: '250', nullable: true, unique: true })
+  @Column({ type: 'varchar', length: '250', nullable: true})
   prioriety: string;
 
   @ApiProperty()
@@ -28,7 +28,7 @@ export class TicketEntity extends BaseEntity {
 
   @ApiProperty()
   @Column({ type: 'varchar', length: '250', nullable: true })
-  file_path: boolean;
+  file_path: string;
 
   @ManyToOne(()=>ClientEntity, (client)=> client)
   client: ClientEntity;
